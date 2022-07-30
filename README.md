@@ -1,5 +1,7 @@
 # automatic-dota-counter-and-synergy-picker
 
+requirements: needs manual installation of pytesseract in local
+
 gets you list of best picks by screenshoting.
 
 usage:
