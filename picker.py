@@ -40,7 +40,7 @@ label = tk.Label(top, text="Best Picks:")
 
 
 while True:
-    time.sleep(1)
+    time.sleep(.6)
     # find new window title
     # z1 = pygetwindow.getAllTitles()
     # # test with pictures folder
@@ -138,6 +138,14 @@ while True:
             if is_image_similiar(hero["img"], PIL.Image.open(f'd{i}.png')):
                 direHeroes.append(hero["name"])
 
+    radiantHeroes = [*set(radiantHeroes)]
+    direHeroes = [*set(direHeroes)]
+
+    if set(['ogre_magi', 'spectre']).issubset(set(radiantHeroes)):  #when no hero is selected, it matches with these two heroes
+        if set(['ogre_magi', 'spectre']).issubset(set(direHeroes)):
+            radiantHeroes = []
+            direHeroes = []
+
     currentPicks = {
         "allies": radiantHeroes if team == "radiant" else direHeroes,
         "enemies": radiantHeroes if team == "dire" else direHeroes
@@ -182,7 +190,12 @@ while True:
     df = pandas.DataFrame({'CARRY': carries[:suggestions]})
     df.index += 1
     df['SUPPORT'] = supports[:suggestions]
-    print(df)
+
+    if radiantHeroes != [] and direHeroes != []:
+        print(currentPicks)
+        print(df)
+    else:
+        print('no heroes detected!')
 
     # for i, hero in enumerate(counters_synergies):
     #     listbox.insert(i, hero)
