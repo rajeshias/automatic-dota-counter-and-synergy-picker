@@ -1,6 +1,7 @@
 import json
 from pprint import pprint
 import numpy
+import pandas
 from pygetwindow import PyGetWindowException
 from config import name, rank, suggestions
 from PIL import ImageFilter, ImageEnhance
@@ -12,8 +13,8 @@ import PIL
 import cv2
 import glob
 import imagehash
-from tkinter import ttk 
-import tkinter as tk 
+from tkinter import ttk
+import tkinter as tk
 
 result = {}
 
@@ -26,16 +27,16 @@ x2, y2 = int(str(x2)), int(str(y2))
 
 top = tk.Tk()
 
-listbox = tk.Listbox(top, height = 10, 
-                  width = 15, 
-                  bg = "grey",
-                  activestyle = 'dotbox', 
-                  font = "Helvetica",
-                  fg = "black")
+listbox = tk.Listbox(top, height=10,
+                     width=15,
+                     bg="grey",
+                     activestyle='dotbox',
+                     font="Helvetica",
+                     fg="black")
 
 top.geometry("300x250")
 
-label = tk.Label(top, text = "Best Picks:") 
+label = tk.Label(top, text="Best Picks:")
 
 
 while True:
@@ -168,14 +169,20 @@ while True:
     with open("structuredDataById.json") as file:
         databyid = json.load(file)
 
-    counters_synergies = []
-    x = 0
+    carries = []
+    supports = []
     for i in sorted(result, key=result.get):
-        if x >= suggestions:
-            break
-        counters_synergies.append(databyid[str(i)]['iName'])
-        x += 1
-    print('\n'.join(counters_synergies), end='\n-----------\n')
+        heroData = databyid[str(i)]
+        if heroData['flags']['carry']:
+            carries.append(heroData['iName'])
+        if heroData['flags']['support']:
+            supports.append(heroData['iName'])
+
+
+    df = pandas.DataFrame({'CARRY': carries[:suggestions]})
+    df.index += 1
+    df['SUPPORT'] = supports[:suggestions]
+    print(df)
 
     # for i, hero in enumerate(counters_synergies):
     #     listbox.insert(i, hero)
@@ -183,13 +190,7 @@ while True:
     #     # pack the widgets
     # label.pack()
     # listbox.pack()
-    
-    
+
     # # Display untill# User delete(0,END)
     # # exits themselves.
     # top.mainloop()
-
-
-
-    
-
